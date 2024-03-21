@@ -33,7 +33,55 @@ const getCategory=async() =>{
     return result;
 }
 
+const getBusinessList=async() =>{
+    const query = gql`
+    query getBusinessList {
+      businessLists {
+        id
+        email
+        name
+        about
+        address
+        contactPerson
+        category {
+          name
+        }
+        images {
+          url
+        }
+      }
+    }
+    `
+    const result = await request(MASTER_URL, query)
+    return result;
+}
+
+const getBusinessListByCategory=async(category) =>{
+    const query = gql`
+    query getBusinessList {
+      businessLists(where: {category: {name: "`+category+`"}}) {
+        id
+        email
+        name
+        about
+        address
+        contactPerson
+        category {
+          name
+        }
+        images {
+          url
+        }
+      }
+    }
+    `
+    const result = await request(MASTER_URL, query)
+    return result;
+}
+
 export default {
     getSlider,
-    getCategory
+    getCategory,
+    getBusinessList,
+    getBusinessListByCategory,
 }

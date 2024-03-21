@@ -24,7 +24,7 @@ export default function Slider() {
         horizontal={true}
         showsHorizontalScrollIndicator={false} //
         renderItem={({item, index}) => (
-            <View style={{marginRight:20}}>
+            <View style={{marginRight:20, borderRadius:10}}>
                 <Image 
                 source={{uri:item?.image?.url}}
                 style={styles.sliderImage}
