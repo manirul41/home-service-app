@@ -1,15 +1,14 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { FlatList, Text, View } from "react-native";
+import PageHeading from "../../Components/PageHeading";
+import Colors from "../../Utils/Colors";
 import GlobalApi from "../../Utils/GlobalApi";
 import BusinessListItem from "./BusinessListItem";
-import Colors from "../../Utils/Colors";
 
 export default function BusinessListByCategory() {
   const [businessList, setBusinessList] = useState();
   const param = useRoute().params;
-  const navigation = useNavigation();
 
   useEffect(() => {
     param && getBusinessByCategory();
@@ -24,20 +23,7 @@ export default function BusinessListByCategory() {
 
   return (
     <View style={{ padding: 20, paddingTop: 30 }}>
-      <TouchableOpacity
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 10,
-          alignItems: "center",
-        }}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back-outline" size={24} color="black" />
-        <Text style={{ fontSize: 25, fontFamily: "outfit-medium" }}>
-          {param?.category}
-        </Text>
-      </TouchableOpacity>
+      <PageHeading title={param?.category}/>
       {businessList?.length > 0 ? (
         <FlatList
           data={businessList}
