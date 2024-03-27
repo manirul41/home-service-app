@@ -14,6 +14,7 @@ import Colors from "../../Utils/Colors";
 import Heading from "../../Components/Heading";
 import BusinessPhotoScreen from "./BusinessPhotoScreen";
 import BookingModal from "./BookingModal";
+import * as Linking from 'expo-linking';
 
 export default function BusinessDetailsScreen() {
   const param = useRoute().params;
@@ -24,6 +25,10 @@ export default function BusinessDetailsScreen() {
   useEffect(() => {
     param && setBusiness(param?.business);
   }, [param]);
+
+  const onMessageBtnClick = () => {
+    Linking.openURL('mailto:'+business?.email+"?subject=I am looking your service&body=Hi there,");
+  }
 
   return (
     business && (
@@ -120,7 +125,7 @@ export default function BusinessDetailsScreen() {
         <View
           style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
         >
-          <TouchableOpacity style={styles?.messageBtn}>
+          <TouchableOpacity style={styles?.messageBtn} onPress={() => onMessageBtnClick()}>
             <Text
               style={{
                 textAlign: "center",
@@ -149,7 +154,10 @@ export default function BusinessDetailsScreen() {
           </TouchableOpacity>
         </View>
         <Modal animationType="slide" visible={showModal}>
-          <BookingModal hideModal={() => setShowModal(false)}/>
+          <BookingModal 
+          businessId = {business?.id}
+          hideModal={() => setShowModal(false)}
+          />
         </Modal>
       </View>
     )

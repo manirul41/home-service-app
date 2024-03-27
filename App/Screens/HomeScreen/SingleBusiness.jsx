@@ -1,10 +1,15 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Colors from "../../Utils/Colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SingleBusiness({ business }) {
+  const navigator = useNavigation();
   return (
-    <View style={styles.container}>
+    <TouchableOpacity 
+    style={styles.container}
+    onPress={() =>navigator.push('business-details',{business: business})}
+    >
       <Image source={{ uri: business?.images[0]?.url }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={{ fontSize: 17, fontFamily: "outfit-medium" }}>
@@ -28,7 +33,7 @@ export default function SingleBusiness({ business }) {
           {business?.category?.name}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

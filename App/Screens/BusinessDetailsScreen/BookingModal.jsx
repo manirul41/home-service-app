@@ -14,13 +14,18 @@ import { useNavigation } from "@react-navigation/native";
 import CalendarPicker from "react-native-calendar-picker";
 import Colors from "../../Utils/Colors";
 import Heading from "../../Components/Heading";
+import GlobalApi from "../../Utils/GlobalApi";
+import { useUser } from "@clerk/clerk-expo";
+import { ToastAndroid } from "react-native";
+import moment from "moment/moment";
 
-export default function BookingModal({ hideModal }) {
+export default function BookingModal({businessId, hideModal }) {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState();
   const [selectedTime, setSelectedTime] = useState();
-  const [Note, setNote] = useState();
+  const [note, setNote] = useState('');
   const [timeList, setTimeList] = useState([]);
+  const {user} = useUser();
 
   useEffect(() => {
     getTime();
@@ -50,6 +55,27 @@ export default function BookingModal({ hideModal }) {
     }
     setTimeList(timeList);
   };
+
+  const createNewBooking = () => {
+    if(!selectedTime||!selectedDate){
+        ToastAndroid.show('Please select Date and Time', ToastAndroid.LONG);
+        return;
+    }
+
+    const data = {
+        userName: user?.fullName,
+        userEmail: user?.primaryEmailAddress?.emailAddress,
+        time: selectedTime,
+        date: moment(selectedDate).format('DD-MMM-yyyy'),
+        note: note,
+        businessId:businessId,
+    }
+    GlobalApi.createBooking(data).then(resp => {
+        // console.log("response: ", resp)
+        ToastAndroid.show('Booking Created Successfully!', ToastAndroid.LONG);
+        hideModal();
+    });
+  }
 
   return (
     <ScrollView>
@@ -137,7 +163,7 @@ export default function BookingModal({ hideModal }) {
             onChange={(text) => setNote(text)}
           />
         </View>
-        <TouchableOpacity style={{ marginTop: 15 }}>
+        <TouchableOpacity style={{ marginTop: 15 }} onPress={() => createNewBooking()}>
           <Text style={styles.confirmBtn}>Confirm & Book</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
